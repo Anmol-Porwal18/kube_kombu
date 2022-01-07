@@ -23,6 +23,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     package_dir={"": "."},
-    packages=setuptools.find_packages(where="."),
+    packages=setuptools.find_packages(exclude=("sample",)),
     python_requires=">=3.9",
+    keywords=["kubernetes", "kombu", "consumer", "liveness probe"]
 )
