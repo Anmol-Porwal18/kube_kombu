@@ -1,7 +1,7 @@
 import json
 import logging
 
-from kube_kombu.consumer import ConsumerAdapter
+from kube_kombu.adapter import ConsumerAdapter
 
 LOGGER = logging.getLogger(__name__)
 

@@ -13,7 +13,7 @@ def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
     django.setup()
 
-    from kube_kombu.consumer import HealthCheckServer
+    from kube_kombu.healthcheck_server import HealthCheckServer
     from kube_kombu.consumer import KombuConsumer
     from sample_consumer import SampleConsumerAdapter
 
@@ -30,9 +30,7 @@ def main():
     try:
         asyncio.run(
             HealthCheckServer(
-                host="127.0.0.1",
-                port=8988,
-                kombu_consumer=consumer
+                host="127.0.0.1", port=8988, kombu_consumer=consumer
             ).serve()
         )
     except Exception as e:

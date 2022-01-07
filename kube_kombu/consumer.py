@@ -1,19 +1,11 @@
-import asyncio
 import logging
 import threading
-from abc import ABC, abstractmethod
 
 from kombu import Exchange, Queue, Connection
-from kombu.mixins import ConsumerMixin
+from kube_kombu.worker import Worker
+
 
 LOGGER = logging.getLogger(__name__)
-
-
-class ConsumerAdapter(ABC):
-    # property variables
-    @abstractmethod
-    def callback(self, body, message):
-        pass
 
 
 class KombuConsumer(threading.Thread):
@@ -60,75 +52,3 @@ class KombuConsumer(threading.Thread):
                 LOGGER.exception(
                     f"Exception in running thread for adapter: {self.adapter}, Error: {e}"
                 )
-
-
-class Worker(ConsumerMixin):
-    def __init__(self, connection, queues, adapter, is_connected):
-        self.connection = connection
-        self.queues = queues
-        self.adapter = adapter
-        self.is_connected = is_connected
-
-    def on_connection_revived(self):
-        self.is_connected[0] = True
-        super().on_connection_revived()
-
-    def on_consume_ready(self, connection, channel, consumers, **kwargs):
-        self.is_connected[0] = True
-        super().on_consume_ready(connection, channel, consumers, **kwargs)
-
-    def on_consume_end(self, connection, channel):
-        self.is_connected[0] = False
-        super().on_consume_end(connection, channel)
-
-    def on_iteration(self):
-        self.is_connected[0] = True
-        super().on_iteration()
-
-    def on_connection_error(self, exc, interval):
-        self.is_connected[0] = False
-        super().on_connection_error(exc, interval)
-
-    def get_consumers(self, Consumer, channel):
-        return [Consumer(queues=self.queues, callbacks=[self.adapter().callback])]
-
-
-class HealthCheckServer(object):
-    def __init__(self, host, port, kombu_consumer):
-        self.host = host
-        self.port = port
-        self.kombu_consumer = kombu_consumer
-        self.server = None
-
-    async def handle_message(self, reader, writer):
-        is_connected = self.kombu_consumer.is_connected[0]
-        if not is_connected:
-            writer.write(b"Not Connected")
-            await writer.drain()
-            writer.close()
-            for sock in self.server.sockets:
-                sock.close()
-
-        data = await reader.read(100)
-        message = data.decode()
-        addr = writer.get_extra_info("peername")
-
-        LOGGER.info(f"Received {message!r} from {addr!r}")
-
-        LOGGER.info(f"Send: {message!r}")
-        writer.write(data)
-        await writer.drain()
-
-        LOGGER.info("Close the Connection")
-        writer.close()
-
-    async def serve(self):
-        self.server = await asyncio.start_server(
-            self.handle_message, self.host, self.port
-        )
-
-        addrs = ", ".join(str(sock.getsockname()) for sock in self.server.sockets)
-        LOGGER.info(f"Serving on {addrs}")
-
-        async with self.server:
-            await self.server.serve_forever()
