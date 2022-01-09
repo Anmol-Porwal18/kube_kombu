@@ -5,10 +5,10 @@ Since Kombu Consumer doesn't come with liveness check this package provides live
 of kombu consumers. This package exposes a TCP port which can be added to [kubernetes liveness](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) probe.
 
 Logic for liveness probe is as follows:-
-1. Opem a asnycnio server TCP port in the same porcess as Consumer. 
+1. Open an asnycio server TCP port in the same process as Consumer. 
 2. On Message Received of TCP checks for liveness of the threads and connection of the Kombu Consumers. 
 3. If the rabbit consumers are found to be inactive this closes the TCP port.
-4. Once the port is closed livenss checks will fail the next time leading to restart of pod
+4. Once the port is closed liveness checks will fail the next time leading to restart of pod
 
 
 # Setup and Running Kombu consumers
@@ -64,9 +64,9 @@ consumer_config = ConsumerConfig(
     )
 ```
 
-`AbstractConsumerAdapter` defines the abstract method `callback` which you need to extend your class with and implment your own adapter on what you want to do on receiving the message.
+`AbstractConsumerAdapter` defines the abstract method `callback` which you need to extend your class with and implement your own adapter on what you want to do on receiving the message.
 
-Sample Adapter Can be writted as :- 
+Sample Adapter Can be written as :- 
 
 ```python
 import json
