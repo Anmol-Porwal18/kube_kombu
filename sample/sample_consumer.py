@@ -1,12 +1,12 @@
 import json
 import logging
 
-from kube_kombu.adapter import ConsumerAdapter
+from kube_kombu.abstract_consumer_adapter import AbstractConsumerAdapter
 
 LOGGER = logging.getLogger(__name__)
 
 
-class SampleConsumerAdapter(ConsumerAdapter):
+class SampleConsumerAdapter(AbstractConsumerAdapter):
     @classmethod
     def handle_event1(cls, data):
         pass
