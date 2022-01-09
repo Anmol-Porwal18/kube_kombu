@@ -14,7 +14,7 @@ setuptools.setup(
     description="Running kombu consumers with support of liveness probe for kubernetes",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    license="BSD",
+    license="MIT",
     url="https://github.com/Anmol-Porwal18/kube_kombu",
     platforms=["any"],
     classifiers=[
