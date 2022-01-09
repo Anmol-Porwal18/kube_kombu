@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class ConsumerAdapter(ABC):
+class AbstractConsumerAdapter(ABC):
     # property variables
     @abstractmethod
     def callback(self, body, message):

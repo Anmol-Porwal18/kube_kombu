@@ -1,42 +1,37 @@
-import asyncio
-import logging
-import os
-
-import django
-from django.conf import settings
-
-
-LOGGER = logging.getLogger(__name__)
-
-
-def main():
+def main(host, port):
+    # setup django before everything
+    """
+    import django
+    from django.conf import settings
+    import os
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
     django.setup()
+    """
 
-    from kube_kombu.healthcheck_server import HealthCheckServer
-    from kube_kombu.consumer import KombuConsumer
     from sample_consumer import SampleConsumerAdapter
-
-    consumer = KombuConsumer(
+    from kube_kombu.consumer_config import ConsumerConfig
+    from kube_kombu.start_consumer import start_consumer
+    consumer_config = ConsumerConfig(
         "URL",
         "EXCHANGE",
         "EXCHANGE_TYPE",
         "ROUTING_KEY",
         "QUEUE",
-        SampleConsumerAdapter,
     )
-
-    consumer.start()
-    try:
-        asyncio.run(
-            HealthCheckServer(
-                host="127.0.0.1", port=8988, kombu_consumer=consumer
-            ).serve()
-        )
-    except Exception as e:
-        LOGGER.exception(f"Exception in running kombu consumer, Error: {e}")
-        consumer.join()
+    start_consumer(
+        consumer_config,
+        SampleConsumerAdapter,
+        host,
+        port
+    )
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description='Setup Host and Port for Kube Liveness check')
+    parser.add_argument('--port', type=int, metavar='path', default=8988,
+                        help='Post to start TCP healthCheck server on. Default is 8988')
+    parser.add_argument('--host', metavar='path', default="0.0.0.0",
+                        help='IP host to start health check server on. Default is 0.0.0.0')
+    args = parser.parse_args()
+    main(args.host, args.port)
