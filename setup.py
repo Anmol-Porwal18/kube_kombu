@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="kube_kombu",
-    version="v1.0.1",
+    version="v1.0.2",
     install_requires=[
         "kombu==5.2.3",
     ],
@@ -18,12 +18,12 @@ setuptools.setup(
     url="https://github.com/Anmol-Porwal18/kube_kombu",
     platforms=["any"],
     classifiers=[
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     package_dir={"": "."},
     packages=setuptools.find_packages(exclude=("sample",)),
-    python_requires=">=3.9",
+    python_requires=">=3.7",
     keywords=["kubernetes", "kombu", "consumer", "liveness probe"],
 )
