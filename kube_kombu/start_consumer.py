@@ -15,9 +15,7 @@ def start_consumer(consumer_config, adapter, host="0.0.0.0", port=8988):
     consumer.start()
     try:
         asyncio.run(
-            HealthCheckServer(
-                host=host, port=port, kombu_consumer=consumer
-            ).serve()
+            HealthCheckServer(host=host, port=port, kombu_consumer=consumer).serve()
         )
     except Exception as e:
         LOGGER.exception(f"Exception in running kombu consumer, Error: {e}")

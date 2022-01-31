@@ -12,7 +12,10 @@ class HealthCheckServer(object):
         self.server = None
 
     async def handle_message(self, reader, writer):
-        is_connected = self.kombu_consumer.is_connected[0]
+        is_connected = (
+            self.kombu_consumer.is_connected[0]
+            and self.kombu_consumer.adapter.check_connectivity()
+        )
         if not is_connected:
             writer.write(b"Not Connected")
             await writer.drain()

@@ -29,7 +29,9 @@ class KombuConsumer(threading.Thread):
         return self.__connection
 
     def run(self):
-        exchange_obj = Exchange(name=self.config.exchange, type=self.config.exchange_type)
+        exchange_obj = Exchange(
+            name=self.config.exchange, type=self.config.exchange_type
+        )
         queues = [
             Queue(
                 name=self.config.queue_name,

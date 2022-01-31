@@ -11,6 +11,7 @@ def main(host, port):
     from sample_consumer import SampleConsumerAdapter
     from kube_kombu.consumer_config import ConsumerConfig
     from kube_kombu.start_consumer import start_consumer
+
     consumer_config = ConsumerConfig(
         "URL",
         "EXCHANGE",
@@ -18,20 +19,27 @@ def main(host, port):
         "ROUTING_KEY",
         "QUEUE",
     )
-    start_consumer(
-        consumer_config,
-        SampleConsumerAdapter,
-        host,
-        port
-    )
+    start_consumer(consumer_config, SampleConsumerAdapter, host, port)
 
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description='Setup Host and Port for Kube Liveness check')
-    parser.add_argument('--port', type=int, metavar='path', default=8988,
-                        help='Post to start TCP healthCheck server on. Default is 8988')
-    parser.add_argument('--host', metavar='path', default="0.0.0.0",
-                        help='IP host to start health check server on. Default is 0.0.0.0')
+
+    parser = argparse.ArgumentParser(
+        description="Setup Host and Port for Kube Liveness check"
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        metavar="path",
+        default=8988,
+        help="Post to start TCP healthCheck server on. Default is 8988",
+    )
+    parser.add_argument(
+        "--host",
+        metavar="path",
+        default="0.0.0.0",
+        help="IP host to start health check server on. Default is 0.0.0.0",
+    )
     args = parser.parse_args()
     main(args.host, args.port)

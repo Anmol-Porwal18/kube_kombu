@@ -1,6 +1,4 @@
-
-class ConsumerConfig():
-
+class ConsumerConfig:
     def __init__(self, url, exchange, exchange_type, routing_key, queue_name):
         self.url = url
         self.exchange = exchange
