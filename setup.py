@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="kube_kombu",
-    version="v1.0.3",
+    version="v1.0.4",
     install_requires=[
         "kombu==5.2.3",
     ],
