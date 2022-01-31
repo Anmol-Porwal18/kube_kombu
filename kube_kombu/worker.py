@@ -9,11 +9,11 @@ class Worker(ConsumerMixin):
         self.is_connected = is_connected
 
     def on_connection_revived(self):
-        self.is_connected[0] = self.adapter.check_connectivity()
+        self.is_connected[0] = True
         super().on_connection_revived()
 
     def on_consume_ready(self, connection, channel, consumers, **kwargs):
-        self.is_connected[0] = self.adapter.check_connectivity()
+        self.is_connected[0] = True
         super().on_consume_ready(connection, channel, consumers, **kwargs)
 
     def on_consume_end(self, connection, channel):
@@ -21,7 +21,7 @@ class Worker(ConsumerMixin):
         super().on_consume_end(connection, channel)
 
     def on_iteration(self):
-        self.is_connected[0] = self.adapter.check_connectivity()
+        self.is_connected[0] = True
         super().on_iteration()
 
     def on_connection_error(self, exc, interval):
