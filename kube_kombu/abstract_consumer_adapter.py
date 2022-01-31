@@ -7,8 +7,9 @@ class AbstractConsumerAdapter(ABC):
     def callback(self, body, message):
         raise NotImplementedError
 
+    @staticmethod
     @abstractmethod
-    def check_connectivity(self):
+    def check_connectivity():
         """
         This method can be used to check any connectivity of the application,
         for example: database connectivity
