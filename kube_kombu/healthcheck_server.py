@@ -1,6 +1,8 @@
 import asyncio
 import logging
 
+from asgiref.sync import sync_to_async
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -14,7 +16,7 @@ class HealthCheckServer(object):
     async def handle_message(self, reader, writer):
         is_connected = (
             self.kombu_consumer.is_connected[0]
-            and self.kombu_consumer.adapter.check_connectivity()
+            and await sync_to_async(self.kombu_consumer.adapter.check_connectivity)()
         )
         if not is_connected:
             writer.write(b"Not Connected")
